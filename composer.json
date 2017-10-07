@@ -1,0 +1,24 @@
+{
+	"autoload" : {
+		"psr-4" : {
+			"Alphabox\\PacktubCawler\\" : "src/Alphabox/PacktubCawler"
+		}
+	},
+	"name" : "hu.alphabox/packtub-cawler",
+	"type" : "library",
+	"require" : {
+		"php" : ">=5.6",
+		"monolog/monolog" : "~1.23"
+	},
+	"authors" : [{
+			"name" : "Daniel Mecsei",
+			"email" : "mecseid@gmail.com",
+			"role" : "developer"
+		}
+	],
+	"description" : "a minimal library to download ebooks from packtub.com",
+	"keywords" : [
+		"packtub",
+		"ebook"
+	]
+}
