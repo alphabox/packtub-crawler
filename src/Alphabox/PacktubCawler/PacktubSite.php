@@ -4,18 +4,18 @@ namespace Alphabox\PacktubCawler;
 
 use DOMDocument;
 use DOMXPath;
+use Monolog\Logger;
 
 class PacktubSite {
     
     private $conn;
     private $logger;
     private $headers;
-    private $cookiePath;
     private $books;
+    private $cookies;
     
-    public function __construct( $logger, $cookiePath ) {
+    public function __construct( Logger $logger ) {
         $this->logger = $logger;
-        $this->cookiePath = $cookiePath;
         $this->books = array();
         $this->headers = array(
             'Accept-language: en'
@@ -43,14 +43,15 @@ class PacktubSite {
         }
         
         // Login to packtpub.com site
-        $this->conn = new Connection( 'https://www.packtpub.com/register', 'POST', $this->headers, $this->cookiePath );
+        $this->conn = new Connection( 'https://www.packtpub.com/register', 'POST', $this->headers );
         $this->conn->setPostFields( $postData );
         $this->conn->getContent();
+        $this->cookies = $this->conn->getCookies();
         $this->conn->close();
     }
     
     public function getAvailableBooks() {
-        $this->conn = new Connection( 'https://www.packtpub.com/account/my-ebooks', 'GET', $this->headers, $this->cookiePath );
+        $this->conn = new Connection( 'https://www.packtpub.com/account/my-ebooks', 'GET', $this->headers, $this->cookies );
         
         libxml_use_internal_errors(true);
         $dom = new DOMDocument();
@@ -61,7 +62,7 @@ class PacktubSite {
         $this->conn->close();
         $domXPath = new DOMXPath( $dom );
         
-        
+        $this->logger->debug('Parse site for available ebooks.' );
         $this->books = array();
         foreach( $domXPath->query("//div[@class='product-line unseen']") as $entry ) {
             if ( $entry->hasAttribute('title') ) {
@@ -97,7 +98,7 @@ class PacktubSite {
         
         if( ! file_exists( $baseDirectory . DIRECTORY_SEPARATOR . $bookName . DIRECTORY_SEPARATOR . $bookName . '.' . $format ) ) {
             $this->logger->info('Download file: ' . $bookName . '.' . $format . ': ' . $this->books[$bookName][$format] );
-            $download = new Connection( $this->books[$bookName][$format], 'GET', $this->headers, COOKIE_FILE_PATH );
+            $download = new Connection( $this->books[$bookName][$format], 'GET', $this->headers, $this->cookies );
             $download->getContentToFile( $baseDirectory . DIRECTORY_SEPARATOR . $bookName . DIRECTORY_SEPARATOR . $bookName . '.' . $format );
             $download->close();
         }
