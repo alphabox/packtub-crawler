@@ -1,10 +1,10 @@
 <?php
 
-namespace Alphabox\PacktubCawler;
+namespace Alphabox\PacktubCrawler;
 
+use Monolog\Logger;
 use DOMDocument;
 use DOMXPath;
-use Monolog\Logger;
 
 class PacktubSite {
     

@@ -1,6 +1,6 @@
 <?php
 
-namespace Alphabox\PacktubCawler;
+namespace Alphabox\PacktubCrawler;
 
 class Connection {
 

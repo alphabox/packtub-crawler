@@ -2,8 +2,7 @@
 
 include_once __DIR__ . '/../vendor/autoload.php';
 
-use Alphabox\PacktubCawler\PacktubSite;
-
+use Alphabox\PacktubCrawler\PacktubSite;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
